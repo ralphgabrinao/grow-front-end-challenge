@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/ralphgabrinao/grow-front-end-challenge/branches/master/badge.svg)](https://semaphoreci.com/ralphgabrinao/grow-front-end-challenge)
+
 <img src="https://avatars1.githubusercontent.com/u/25853537?s=400&u=87eb6400064d11349ee0c8604dd45df9f76da9ee&v=4" alt="Grow Logo" width="300">
 
 # Front-end Challenge
