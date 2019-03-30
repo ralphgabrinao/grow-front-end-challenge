@@ -19,7 +19,6 @@ export class App extends React.Component {
 		const globalProps = {};
 		return (
 			<Wrapper>
-				Hello, World!
 				<Routes globalProps={globalProps}/>
 			</Wrapper>
 		);
