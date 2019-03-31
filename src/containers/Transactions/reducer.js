@@ -3,7 +3,8 @@ import { newState } from '../../utils/state';
 
 const initialState = {
 	accountsData: null,
-	transactionsData: null
+	transactionsData: null,
+	filteredTransactions: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -17,7 +18,7 @@ const reducer = (state = initialState, action) => {
 			return newState(state, { transactionsData: action.payload });
 		case actionTypes.FETCH_TRANSACTIONS_FAILURE:
 			return newState(state, { transactionsData: null });
-			
+
 		default:
 			return state;
 	}

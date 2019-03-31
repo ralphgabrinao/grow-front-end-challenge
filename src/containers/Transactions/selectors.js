@@ -4,8 +4,13 @@ import { createSelector } from 'reselect';
 const getAccountsData = state => state.Transactions.accountsData;
 const getTransactionsData = state => state.Transactions.transactionsData;
 
-export const getMappedTransactionsData = createSelector(
-	[getAccountsData, getTransactionsData],
+export const makeSelectAccountsData = createSelector(
+	getAccountsData,
+	data => data
+);
+
+export const makeSelectTransactionsData = createSelector(
+	[makeSelectAccountsData, getTransactionsData],
 	(accountsData, transactionsData) => {
 		if (!transactionsData) return null;
 		const accounts = accountsData ? accountsData.accounts : [];
@@ -17,5 +22,26 @@ export const getMappedTransactionsData = createSelector(
 		});
 		//console.log('Recalculating transactions...');
 		return Object.assign(transactionsData, { transactions });
+	}
+);
+
+const getFilteredTransactionsData = createSelector(
+	makeSelectTransactionsData,
+	transactionsData => {
+		if (!transactionsData) return null;
+		return transactionsData.transactions;
+	}
+);
+
+export const getGroupedTransactions = createSelector(
+	getFilteredTransactionsData,
+	transactions => {
+		if (!transactions) return [];
+		const transactionDates = Array.from(new Set(transactions.map(t => t.transactionDate)));
+		return transactionDates.map(d => {
+			return {
+				date: d, 
+				transactions: transactions.filter(t => t.transactionDate === d) } 
+		});
 	}
 );
