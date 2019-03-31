@@ -1,33 +1,31 @@
 import { createSelector } from 'reselect';
 
 /* istanbul ignore next */
-const getAccountsData = state => state.Transactions.accountsData;
+export const getAccountsData = state => state.Transactions.accountsData;
 const getTransactionsData = state => state.Transactions.transactionsData;
 
-export const makeSelectAccountsData = createSelector(
-	getAccountsData,
-	data => data
-);
-
 export const makeSelectTransactionsData = createSelector(
-	[makeSelectAccountsData, getTransactionsData],
+	[getAccountsData, getTransactionsData],
 	(accountsData, transactionsData) => {
 		if (!transactionsData) return null;
 		const accounts = accountsData ? accountsData.accounts : [];
 		const transactions = transactionsData.transactions.map(t => {
 			return {
 				...t,
+				category: t.category ? t.category : 'MISC',
 				account: accounts ? accounts.filter(a => a.accountId === t.accountId)[0] : null
 			};
 		});
-		//console.log('Recalculating transactions...');
 		return Object.assign(transactionsData, { transactions });
 	}
 );
 
 const getFilteredTransactionsData = createSelector(
-	makeSelectTransactionsData,
-	transactionsData => {
+	// recalculate filtered transactions when either: 
+	// 		accountsData changes, or
+	// 		makeSelectTransactionsData alters transactionsData (by adding account to each transaction)
+	[getAccountsData, makeSelectTransactionsData],
+	(accountsData, transactionsData) => {
 		if (!transactionsData) return null;
 		return transactionsData.transactions;
 	}
