@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const cardHeight = '88px';
+const cardHeight = '72px';
 
 const Wrapper = styled.div`
 	height: ${cardHeight};
@@ -22,20 +22,20 @@ const Text = styled.div`
 `;
 
 const OverlineText = styled.span`
-	font-size: 12px;
+	font-size: 10px;
 	font-weight: 600;
 	opacity: 0.6;
 	letter-spacing: 2px;
 `;
 
 const PrimaryText = styled.div`
-	font-size: 16px;
+	font-size: 12px;
 	margin-top: 2px;
 	margin-bottom: 2px;
 `;
 
 const SecondaryText = styled.span`
-	font-size: 12px;
+	font-size: 10px;
 	opacity: 0.7;
 `;
 
@@ -45,7 +45,7 @@ const Amount = styled.div`
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	font-size: 20px;
+	font-size: 16px;
 	font-weight: 400;
 `;
 
