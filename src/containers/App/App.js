@@ -9,10 +9,10 @@ const Wrapper = styled.div`
 	overflow-y: scroll;
 	height: 100vh;
 	font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	background-color: #f7f4ed;
+	background-color: #ECECEC;
 	color: #333333;
 	line-height: 1.42857143;
-	font-size: 14px;
+	font-size: 12px;
 `;
 
 export class App extends React.Component {

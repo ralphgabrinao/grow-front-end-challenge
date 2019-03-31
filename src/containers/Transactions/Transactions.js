@@ -31,7 +31,6 @@ export class Transactions extends React.Component {
 
 	render() {
 		const state = this.props.Transactions;
-		console.log(state);
 		const transactions = state.filteredTransactions;
 		const transactionsList = { sm: 6, renderComponent: () => <TransactionsList transactions={transactions} /> };
 		return (
