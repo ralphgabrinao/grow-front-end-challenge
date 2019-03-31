@@ -2,6 +2,8 @@ import { createSelector } from 'reselect';
 
 /* istanbul ignore next */
 export const getAccountsData = state => state.Transactions.accountsData;
+export const getCategories = state => state.Transactions.categories;
+export const getFilters = state => state.Transactions.filters;
 const getTransactionsData = state => state.Transactions.transactionsData;
 
 export const makeSelectTransactionsData = createSelector(
@@ -23,11 +25,16 @@ export const makeSelectTransactionsData = createSelector(
 const getFilteredTransactionsData = createSelector(
 	// recalculate filtered transactions when either: 
 	// 		accountsData changes, or
-	// 		makeSelectTransactionsData alters transactionsData (by adding account to each transaction)
-	[getAccountsData, makeSelectTransactionsData],
-	(accountsData, transactionsData) => {
+	// 		makeSelectTransactionsData alters transactionsData (by adding account to each transaction), or
+	// 		the filters change
+	[getAccountsData, makeSelectTransactionsData, getFilters],
+	(accountsData, transactionsData, filters) => {
 		if (!transactionsData) return null;
-		return transactionsData.transactions;
+		const transactions = transactionsData.transactions
+			// by category
+			.filter(t => filters.category[t.category.toLowerCase()]);
+
+		return transactions;
 	}
 );
 

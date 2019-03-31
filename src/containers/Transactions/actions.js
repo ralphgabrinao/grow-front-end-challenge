@@ -17,6 +17,22 @@ const actions = {
 			type: actionTypes.FETCH_ACCOUNTS_FAILURE
 		};
 	},
+	fetchCategories: () => {
+		return {
+			type: actionTypes.FETCH_CATEGORIES
+		};
+	},
+	fetchCategoriesSuccess: payload => {
+		return {
+			type: actionTypes.FETCH_CATEGORIES_SUCCESS,
+			payload
+		};
+	},
+	fetchCategoriesFailure: () => {
+		return {
+			type: actionTypes.FETCH_CATEGORIES_FAILURE
+		};
+	},
 	fetchTransactions: () => {
 		return {
 			type: actionTypes.FETCH_TRANSACTIONS
@@ -32,6 +48,12 @@ const actions = {
 		return {
 			type: actionTypes.FETCH_TRANSACTIONS_FAILURE
 		};
+	},
+	addNewFilter: payload => {
+		return {
+			type: actionTypes.ADD_NEW_FILTER,
+			payload
+		}
 	}
 };
 
