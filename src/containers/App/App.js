@@ -6,6 +6,7 @@ import Routes from './Routes';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+	overflow-y: scroll;
 	height: 100vh;
 	font-family: "proxima-nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	background-color: #f7f4ed;
@@ -19,7 +20,6 @@ export class App extends React.Component {
 		const globalProps = {};
 		return (
 			<Wrapper>
-				Hello, World!
 				<Routes globalProps={globalProps}/>
 			</Wrapper>
 		);
