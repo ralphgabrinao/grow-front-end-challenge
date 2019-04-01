@@ -66,7 +66,7 @@ export class Transactions extends React.Component {
 				<CategoriesFilter
 					options={state.filters.category}
 					handleChange={() => this.props.toggleCategory} /> }
-		const transactionsList = { sm: 8, header: 'Activity', renderComponent: () => <TransactionsList transactions={transactions} /> };
+		const transactionsList = { header: 'Activity', renderComponent: () => <TransactionsList transactions={transactions} /> };
 		return (
 			<Wrapper>
 				<Grid container spacing={24} justify='center'>
