@@ -29,6 +29,11 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.FETCH_TRANSACTIONS_FAILURE:
 			return newState(state, { transactionsData: null });
 
+		case actionTypes.FILTER_ACCOUNT:
+			return newState(state, { filters: {
+				...state.filters,
+				account: action.payload
+			}});
 		case actionTypes.TOGGLE_CATEGORY:
 			return newState(state, { filters: {
 				...state.filters,

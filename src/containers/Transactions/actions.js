@@ -1,6 +1,12 @@
 import { actionTypes } from './constants';
 
 const actions = {
+	addNewFilter: payload => {
+		return {
+			type: actionTypes.ADD_NEW_FILTER,
+			payload
+		}
+	},
 	fetchAccounts: () => {
 		return {
 			type: actionTypes.FETCH_ACCOUNTS
@@ -49,9 +55,9 @@ const actions = {
 			type: actionTypes.FETCH_TRANSACTIONS_FAILURE
 		};
 	},
-	addNewFilter: payload => {
+	filterAccount: payload => {
 		return {
-			type: actionTypes.ADD_NEW_FILTER,
+			type: actionTypes.FILTER_ACCOUNT,
 			payload
 		}
 	},
