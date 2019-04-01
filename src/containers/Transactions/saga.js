@@ -13,6 +13,31 @@ export function * fetchAccounts() {
 	}
 }
 
+export function * fetchCategories() {
+	try {
+		const response = yield call(client.get, endpoints.categories);
+		const categories = response.data ? response.data.categories : [];
+		yield put(actions.fetchCategoriesSuccess(categories));
+
+		const filter = {
+			key: 'category',
+			options: {}
+		}
+
+		categories.forEach(c => {
+			filter.options[c] = true;
+		});
+
+		filter.options['MISC'] = true;
+		
+		yield put(actions.addNewFilter(filter));
+
+	}
+	catch(e) {
+		yield put(actions.fetchCategoriesFailure());
+	}
+}
+
 export function * fetchTransactions() {
 	try {
 		const response = yield call(client.get, endpoints.transactions);
@@ -25,5 +50,6 @@ export function * fetchTransactions() {
 
 export const transactionsSagas = [
 	takeEvery(actionTypes.FETCH_ACCOUNTS, fetchAccounts),
+	takeEvery(actionTypes.FETCH_CATEGORIES, fetchCategories),
 	takeEvery(actionTypes.FETCH_TRANSACTIONS, fetchTransactions)
 ];
