@@ -29,6 +29,14 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.FETCH_TRANSACTIONS_FAILURE:
 			return newState(state, { transactionsData: null });
 
+		case actionTypes.TOGGLE_CATEGORY:
+			return newState(state, { filters: {
+				...state.filters,
+				category: {
+					...state.filters.category,
+					[action.payload]: !state.filters.category[action.payload]
+				}
+			}});
 		default:
 			return state;
 	}

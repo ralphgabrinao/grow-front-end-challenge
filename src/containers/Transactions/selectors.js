@@ -32,7 +32,7 @@ const getFilteredTransactionsData = createSelector(
 		if (!transactionsData) return null;
 		const transactions = transactionsData.transactions
 			// by category
-			.filter(t => filters.category[t.category.toLowerCase()]);
+			.filter(t => filters.category && filters.category[t.category]);
 
 		return transactions;
 	}

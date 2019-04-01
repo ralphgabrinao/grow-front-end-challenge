@@ -25,8 +25,10 @@ export function * fetchCategories() {
 		}
 
 		categories.forEach(c => {
-			filter.options[c.toLowerCase()] = true;
+			filter.options[c] = true;
 		});
+
+		filter.options['MISC'] = true;
 		
 		yield put(actions.addNewFilter(filter));
 

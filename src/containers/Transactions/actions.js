@@ -54,6 +54,12 @@ const actions = {
 			type: actionTypes.ADD_NEW_FILTER,
 			payload
 		}
+	},
+	toggleCategory: payload => {
+		return {
+			type: actionTypes.TOGGLE_CATEGORY,
+			payload
+		}
 	}
 };
 
