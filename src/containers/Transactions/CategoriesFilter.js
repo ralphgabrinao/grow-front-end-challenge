@@ -25,14 +25,14 @@ const Header = styled.span`
 	opacity: 0.7;
 `;
 
-const Link = styled.button`
-	font-size: 12px;
-	cursor: pointer;
-	border: none;
+// const Link = styled.button`
+// 	font-size: 12px;
+// 	cursor: pointer;
+// 	border: none;
 
-	&:focus { outline: 0; }
-	&:hover { text-decoration: underline; }
-`;
+// 	&:focus { outline: 0; }
+// 	&:hover { text-decoration: underline; }
+// `;
 
 const renderOption = (o, handleChange) => {
 	const checkbox = () => 
@@ -48,7 +48,7 @@ const renderOption = (o, handleChange) => {
 };
 
 export const CategoriesFilter = (props) => {
-	const { options, handleChange, toggleAll } = props;
+	const { options, handleChange } = props;
 	const entries = options ? Object.entries(options) : [];
 	const renderOptions = entries.map(e => renderOption(e, handleChange));
 	return (
