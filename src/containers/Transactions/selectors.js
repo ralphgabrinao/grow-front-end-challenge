@@ -31,8 +31,9 @@ const getFilteredTransactionsData = createSelector(
 	(accountsData, transactionsData, filters) => {
 		if (!transactionsData) return null;
 		const transactions = transactionsData.transactions
-			// by category
-			.filter(t => filters.category && filters.category[t.category]);
+			.filter(t => 
+				filters.account && (!filters.account.accountId || filters.account.accountId === t.account.accountId) &&
+				filters.category && filters.category[t.category]);
 
 		return transactions;
 	}

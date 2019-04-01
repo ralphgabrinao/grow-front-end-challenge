@@ -18,13 +18,6 @@ const HeaderWrapper = styled.div`
 	align-items: center;
 `;
 
-const Header = styled.span`
-	font-size: 14px;
-	font-weight: 600;
-	letter-spacing: 2px;
-	opacity: 0.7;
-`;
-
 // const Link = styled.button`
 // 	font-size: 12px;
 // 	cursor: pointer;
@@ -55,7 +48,6 @@ export const CategoriesFilter = (props) => {
 		<Wrapper>
 			<FormControl component='fieldset'>
 				<HeaderWrapper>
-					<Header>Categories</Header>
 					{/* <Link onClick={toggleAll}>Toggle All</Link> */}
 				</HeaderWrapper>
 				<FormGroup>
