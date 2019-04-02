@@ -6,6 +6,7 @@ import { AccountDetails } from './AccountDetails';
 import { AccountFilter } from './AccountFilter';
 import { CategoriesFilter } from './CategoriesFilter';
 import { TransactionsList } from './TransactionsList';
+import { TransactionSort } from './TransactionSort';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
@@ -14,7 +15,9 @@ import {
 	makeSelectTransactionsData,
 	getAccountsData,
 	getCategories,
-	getFilters
+	getFilters,
+	getSortOptions,
+	getSortValue
 } from './selectors';
 
 const Wrapper = styled.div`
@@ -28,6 +31,11 @@ const Header = styled.div`
 	font-weight: 600;
 	letter-spacing: 2px;
 	opacity: 0.7;
+`;
+
+const HeaderRow = styled.div`
+	display: flex;
+	justify-content: space-between;
 	padding: 24px 24px 0px 24px;
 `;
 
@@ -39,7 +47,7 @@ const renderGridItem = ({ header, renderComponent }) => {
 	return (
 		<Grid item sm={12}>
 			<Paper square={false} elevation={1}>
-				{header ? <Header>{header}</Header> : ''}
+				{header ? header() : ''}
 				{renderComponent()}
 			</Paper>
 			<Divider />
@@ -52,6 +60,7 @@ export class Transactions extends React.Component {
 		this.props.fetchAccounts();
 		this.props.fetchTransactions();
 		this.props.fetchCategories();
+		this.props.fetchSortOptions();
 	}
 
 	render() {
@@ -61,19 +70,36 @@ export class Transactions extends React.Component {
 		const accountFilter = state.filters ? state.filters.account : null;
 		const accountDetails = { renderComponent: () => <AccountDetails account={accountFilter}></AccountDetails> }
 		const categoriesFilter = {
-			header: 'Categories',
+			header: () => 
+				<HeaderRow>
+					<Header>Categories</Header>
+				</HeaderRow>,
 			renderComponent: () => 
 				<CategoriesFilter
 					options={state.filters.category}
-					handleChange={() => this.props.toggleCategory} /> }
-		const transactionsList = { header: 'Activity', renderComponent: () => <TransactionsList transactions={transactions} /> };
+					handleChange={() => this.props.toggleCategory} /> 
+		};
+
+		const sortOptions = state.sortOptions;
+		const sortValue = state.sortValue;
+		const transactionsList = {
+			header: () => 
+				<HeaderRow>
+					<Header>Activity</Header>
+					<TransactionSort
+						options={sortOptions}
+						value={sortValue}
+						handleChange={() => this.props.sortTransactions} />
+				</HeaderRow>,
+			renderComponent: () => <TransactionsList transactions={transactions} />
+		};
 		return (
 			<Wrapper>
 				<Grid container spacing={24} justify='center'>
 					<Grid item sm={12}>
 						<AccountFilter
-							accounts={accounts}
-							selected={accountFilter}
+							options={accounts}
+							value={accountFilter}
 							handleChange={() => this.props.filterAccount} />
 					</Grid>
 					<Grid item sm={4}>
@@ -92,8 +118,10 @@ export class Transactions extends React.Component {
 Transactions.propTypes = {
 	Transactions: PropTypes.shape({
 		accountsData: PropTypes.object,
+		categories: PropTypes.array,
 		transactionsData: PropTypes.object,
 		filteredTransactions: PropTypes.array,
+		filters: PropTypes.object,
 		fetchAccounts: PropTypes.func,
 		fetchTransactions: PropTypes.func
 	})
@@ -107,7 +135,9 @@ const mapStateToProps = state => {
 			categories: getCategories(state),
 			transactionsData: makeSelectTransactionsData(state),
 			filteredTransactions: getGroupedTransactions(state),
-			filters: getFilters(state)
+			filters: getFilters(state),
+			sortOptions: getSortOptions(state),
+			sortValue: getSortValue(state)
 		}
 	};
 };
@@ -117,8 +147,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 	fetchAccounts: () => dispatch(actions.fetchAccounts()),
 	fetchCategories: () => dispatch(actions.fetchCategories()),
+	fetchSortOptions: () => dispatch(actions.fetchSortOptions()),
 	fetchTransactions: () => dispatch(actions.fetchTransactions()),
 	filterAccount: (event) => dispatch(actions.filterAccount(event.target.value)),
+	sortTransactions: (event) => dispatch(actions.sortTransactions(event.target.value)),
 	toggleCategory: (event) => dispatch(actions.toggleCategory(event.target.value))
 });
 

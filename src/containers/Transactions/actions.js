@@ -39,6 +39,11 @@ const actions = {
 			type: actionTypes.FETCH_CATEGORIES_FAILURE
 		};
 	},
+	fetchSortOptions: () =>{
+		return {
+			type: actionTypes.FETCH_SORT_OPTIONS
+		};
+	},
 	fetchTransactions: () => {
 		return {
 			type: actionTypes.FETCH_TRANSACTIONS
@@ -61,11 +66,17 @@ const actions = {
 			payload
 		}
 	},
+	sortTransactions: payload => {
+		return {
+			type: actionTypes.SORT_TRANSACTIONS,
+			payload
+		};
+	},
 	toggleCategory: payload => {
 		return {
 			type: actionTypes.TOGGLE_CATEGORY,
 			payload
-		}
+		};
 	}
 };
 
