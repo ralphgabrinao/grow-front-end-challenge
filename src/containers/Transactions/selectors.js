@@ -1,12 +1,11 @@
 import { createSelector } from 'reselect';
-import { allAccounts } from './constants';
+import { allAccounts, defaultSortOptions } from './constants';
 
 /* istanbul ignore next */
 export const getAccountsData = state => state.Transactions.accountsData;
 export const getCategories = state => state.Transactions.categories;
 const getFilters = state => state.Transactions.filters;
-export const getSortOptions = state => state.Transactions.sortOptions;
-export const getSortValue = state => state.Transactions.sortValue;
+const getSort = state => state.Transactions.sort;
 const getTransactionsData = state => state.Transactions.transactionsData;
 
 export const makeSelectFilters = createSelector(
@@ -16,6 +15,7 @@ export const makeSelectFilters = createSelector(
 			if (accountsData) {
 				const arrSum = arr => arr.reduce((a,b) => a + b, 0);
 				const filter = allAccounts;
+				filter.balance = 0;
 				filter.balance = arrSum(accountsData.accounts.map(a => a.balance));
 				filters.account = filter;
 			}
@@ -31,6 +31,17 @@ export const makeSelectFilters = createSelector(
 		}
 
 		return filters;
+	}
+);
+
+export const makeSelectSort = createSelector(
+	[getSort],
+	(sort) => {
+		if (!sort.value) {
+			sort.options = defaultSortOptions;
+			sort.value = defaultSortOptions[0];
+		}
+		return sort;
 	}
 );
 
@@ -54,12 +65,8 @@ export const makeSelectTransactionsData = createSelector(
 );
 
 const getFilteredTransactionsData = createSelector(
-	// recalculate filtered transactions when either: 
-	// 		accountsData changes, or
-	// 		makeSelectTransactionsData alters transactionsData (by adding account to each transaction), or
-	// 		the filters change
-	[getAccountsData, makeSelectTransactionsData, getFilters, getSortValue],
-	(accountsData, transactionsData, filters, sortValue) => {
+	[getAccountsData, makeSelectTransactionsData, makeSelectFilters],
+	(accountsData, transactionsData, filters) => {
 		if (!transactionsData) return null;
 		const transactions = transactionsData.transactions
 			.filter(t => 
@@ -69,17 +76,18 @@ const getFilteredTransactionsData = createSelector(
 	}
 );
 
-const getSortedTransactiionsData = createSelector(
-	[getFilteredTransactionsData, getSortValue],
-	(transactions, sortValue) => {		
-		if (!transactions || !sortValue) return transactions;
-		transactions.sort(sortValue.comparer);
-		return transactions;
+const getSortedTransactionsData = createSelector(
+	[getFilteredTransactionsData, makeSelectSort],
+	(transactions, sort) => {
+		if (!transactions || !sort.value) return transactions;
+		const arr = Array.from(transactions);
+		arr.sort(sort.value.comparer);
+		return arr;
 	}
 );
 
 export const getGroupedTransactions = createSelector(
-	getSortedTransactiionsData,
+	getSortedTransactionsData,
 	transactions => {
 		if (!transactions) return [];
 		const transactionDates = Array.from(new Set(transactions.map(t => t.transactionDate)));
