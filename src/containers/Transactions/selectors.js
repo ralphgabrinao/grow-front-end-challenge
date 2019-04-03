@@ -30,6 +30,13 @@ export const makeSelectFilters = createSelector(
 			}
 		}
 
+		if (!filters.date) {
+			filters.date = {
+				from: '',
+				to: ''
+			}
+		}
+
 		return filters;
 	}
 );
@@ -45,14 +52,18 @@ export const makeSelectSort = createSelector(
 	}
 );
 
+const stringToDate = (str) => {
+	const split = str.split('-');
+	return new Date(split[0], split[1], split[2]);
+}
+
 export const makeSelectTransactionsData = createSelector(
 	[getAccountsData, getTransactionsData],
 	(accountsData, transactionsData) => {
 		if (!transactionsData) return null;
 		const accounts = accountsData ? accountsData.accounts : [];
 		const transactions = transactionsData.transactions.map(t => {
-			const split = t.transactionDate.split('-');
-			const date = new Date(split[0], split[1], split[2]);
+			const date = stringToDate(t.transactionDate);
 			return {
 				...t,
 				transactionDateTime: date,
@@ -69,9 +80,10 @@ const getFilteredTransactionsData = createSelector(
 	(accountsData, transactionsData, filters) => {
 		if (!transactionsData) return null;
 		const transactions = transactionsData.transactions
-			.filter(t => 
+			.filter(t =>
 				filters.account && (!filters.account.accountId || filters.account.accountId === t.account.accountId) &&
-				filters.category && filters.category[t.category]);
+				filters.category && filters.category[t.category] &&
+				filters.date && (filters.date.from.length === 0 || stringToDate(filters.date.from) <= t.transactionDateTime) && (filters.date.to.length === 0 || stringToDate(filters.date.to) >= t.transactionDateTime));
 		return transactions;
 	}
 );

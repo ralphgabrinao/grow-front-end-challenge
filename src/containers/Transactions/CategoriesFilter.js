@@ -12,21 +12,6 @@ const Wrapper = styled.div`
 	overflow-y: scroll;
 `;
 
-const HeaderWrapper = styled.div`
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-`;
-
-// const Link = styled.button`
-// 	font-size: 12px;
-// 	cursor: pointer;
-// 	border: none;
-
-// 	&:focus { outline: 0; }
-// 	&:hover { text-decoration: underline; }
-// `;
-
 const renderOption = (o, handleChange) => {
 	const checkbox = () => 
 		<Checkbox
@@ -47,9 +32,6 @@ export const CategoriesFilter = (props) => {
 	return (
 		<Wrapper>
 			<FormControl component='fieldset'>
-				<HeaderWrapper>
-					{/* <Link onClick={toggleAll}>Toggle All</Link> */}
-				</HeaderWrapper>
 				<FormGroup>
 					{renderOptions}
 				</FormGroup>

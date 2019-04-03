@@ -36,6 +36,24 @@ const reducer = (state = initialState, action) => {
 				account: action.payload
 			}});
 
+		case actionTypes.FILTER_BY_DATE_FROM:
+			return newState(state, { filters: {
+				...state.filters,
+				date: {
+					...state.filters.date,
+					from: action.payload
+				}
+			}});
+
+		case actionTypes.FILTER_BY_DATE_TO:
+			return newState(state, { filters: {
+				...state.filters,
+				date: {
+					...state.filters.date,
+					to: action.payload
+				}
+			}});
+
 		case actionTypes.RESET_ALL_FILTERS:
 			return newState(state, { filters: {}, sort: {} });
 

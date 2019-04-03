@@ -61,6 +61,18 @@ const actions = {
 			payload
 		};
 	},
+	filterByDateFrom: payload => {
+		return {
+			type: actionTypes.FILTER_BY_DATE_FROM,
+			payload
+		};
+	},
+	filterByDateTo: payload => {
+		return {
+			type: actionTypes.FILTER_BY_DATE_TO,
+			payload
+		};
+	},
 	resetAllFilters: payload => {
 		return {
 			type: actionTypes.RESET_ALL_FILTERS,
