@@ -1,6 +1,5 @@
 import { actionTypes } from './constants';
 import { newState } from '../../utils/state';
-import { defaultSortOptions } from './constants';
 
 const initialState = {
 	accountsData: null,
@@ -8,8 +7,7 @@ const initialState = {
 	transactionsData: null,
 	filteredTransactions: [],
 	filters: {},
-	sortOptions: [],
-	sortValue: {}
+	sort: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -27,12 +25,6 @@ const reducer = (state = initialState, action) => {
 		case actionTypes.FETCH_CATEGORIES_FAILURE:
 			return newState(state, { categories: [] });
 
-		case actionTypes.FETCH_SORT_OPTIONS:
-			return newState(state, { 
-				sortOptions: defaultSortOptions,
-				sortValue: defaultSortOptions[0]
-			});
-
 		case actionTypes.FETCH_TRANSACTIONS_SUCCESS:
 			return newState(state, { transactionsData: action.payload });
 		case actionTypes.FETCH_TRANSACTIONS_FAILURE:
@@ -44,9 +36,12 @@ const reducer = (state = initialState, action) => {
 				account: action.payload
 			}});
 
+		case actionTypes.RESET_ALL_FILTERS:
+			return newState(state, { filters: {}, sort: {} });
+
 		case actionTypes.SORT_TRANSACTIONS:
-			return newState(state, { sortValue: action.payload });
-			
+			return newState(state, { sort: { ...state.sort, value: action.payload }});
+
 		case actionTypes.TOGGLE_CATEGORY:
 			return newState(state, { filters: {
 				...state.filters,

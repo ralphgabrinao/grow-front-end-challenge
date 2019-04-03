@@ -15,9 +15,8 @@ import {
 	makeSelectTransactionsData,
 	getAccountsData,
 	getCategories,
-	getFilters,
-	getSortOptions,
-	getSortValue
+	makeSelectFilters,
+	makeSelectSort
 } from './selectors';
 
 const Wrapper = styled.div`
@@ -43,6 +42,15 @@ const Divider = styled.div`
 	height: 20px;
 `;
 
+const Link = styled.button`
+	font-size: 12px;
+	opacity: 0.7;
+	&:hover { cursor: pointer; text-decoration: underline; }
+	&:focus { outline: 0; }
+	background: none;
+	border: none;
+`;
+
 const renderGridItem = ({ header, renderComponent }) => {
 	return (
 		<Grid item sm={12}>
@@ -60,7 +68,6 @@ export class Transactions extends React.Component {
 		this.props.fetchAccounts();
 		this.props.fetchTransactions();
 		this.props.fetchCategories();
-		this.props.fetchSortOptions();
 	}
 
 	render() {
@@ -80,8 +87,8 @@ export class Transactions extends React.Component {
 					handleChange={() => this.props.toggleCategory} /> 
 		};
 
-		const sortOptions = state.sortOptions;
-		const sortValue = state.sortValue;
+		const sortOptions = state.sort.options;
+		const sortValue = state.sort.value;
 		const transactionsList = {
 			header: () => 
 				<HeaderRow>
@@ -93,6 +100,13 @@ export class Transactions extends React.Component {
 				</HeaderRow>,
 			renderComponent: () => <TransactionsList transactions={transactions} />
 		};
+		const resetLink = () => {
+			return (
+				<Grid item sm={12}>
+					<Link onClick={() => this.props.resetAllFilters()}>Reset all filters</Link>
+				</Grid>
+			);
+		}
 		return (
 			<Wrapper>
 				<Grid container spacing={24} justify='center'>
@@ -105,6 +119,7 @@ export class Transactions extends React.Component {
 					<Grid item sm={4}>
 						{renderGridItem(accountDetails)}
 						{renderGridItem(categoriesFilter)}
+						{resetLink()}
 					</Grid>
 					<Grid item sm={8}>
 						{renderGridItem(transactionsList)}
@@ -122,6 +137,10 @@ Transactions.propTypes = {
 		transactionsData: PropTypes.object,
 		filteredTransactions: PropTypes.array,
 		filters: PropTypes.object,
+		sort: PropTypes.shape({
+			options: PropTypes.array,
+			value: PropTypes.object
+		}),
 		fetchAccounts: PropTypes.func,
 		fetchTransactions: PropTypes.func
 	})
@@ -135,9 +154,8 @@ const mapStateToProps = state => {
 			categories: getCategories(state),
 			transactionsData: makeSelectTransactionsData(state),
 			filteredTransactions: getGroupedTransactions(state),
-			filters: getFilters(state),
-			sortOptions: getSortOptions(state),
-			sortValue: getSortValue(state)
+			filters: makeSelectFilters(state),
+			sort: makeSelectSort(state)
 		}
 	};
 };
@@ -147,9 +165,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 	fetchAccounts: () => dispatch(actions.fetchAccounts()),
 	fetchCategories: () => dispatch(actions.fetchCategories()),
-	fetchSortOptions: () => dispatch(actions.fetchSortOptions()),
 	fetchTransactions: () => dispatch(actions.fetchTransactions()),
 	filterAccount: (event) => dispatch(actions.filterAccount(event.target.value)),
+	resetAllFilters: () => dispatch(actions.resetAllFilters()),
 	sortTransactions: (event) => dispatch(actions.sortTransactions(event.target.value)),
 	toggleCategory: (event) => dispatch(actions.toggleCategory(event.target.value))
 });
