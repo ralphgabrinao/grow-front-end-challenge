@@ -16,8 +16,7 @@ import {
 	getAccountsData,
 	getCategories,
 	makeSelectFilters,
-	getSortOptions,
-	getSortValue
+	makeSelectSort
 } from './selectors';
 
 const Wrapper = styled.div`
@@ -69,7 +68,6 @@ export class Transactions extends React.Component {
 		this.props.fetchAccounts();
 		this.props.fetchTransactions();
 		this.props.fetchCategories();
-		this.props.fetchSortOptions();
 	}
 
 	render() {
@@ -89,8 +87,8 @@ export class Transactions extends React.Component {
 					handleChange={() => this.props.toggleCategory} /> 
 		};
 
-		const sortOptions = state.sortOptions;
-		const sortValue = state.sortValue;
+		const sortOptions = state.sort.options;
+		const sortValue = state.sort.value;
 		const transactionsList = {
 			header: () => 
 				<HeaderRow>
@@ -139,6 +137,10 @@ Transactions.propTypes = {
 		transactionsData: PropTypes.object,
 		filteredTransactions: PropTypes.array,
 		filters: PropTypes.object,
+		sort: PropTypes.shape({
+			options: PropTypes.array,
+			value: PropTypes.object
+		}),
 		fetchAccounts: PropTypes.func,
 		fetchTransactions: PropTypes.func
 	})
@@ -153,8 +155,7 @@ const mapStateToProps = state => {
 			transactionsData: makeSelectTransactionsData(state),
 			filteredTransactions: getGroupedTransactions(state),
 			filters: makeSelectFilters(state),
-			sortOptions: getSortOptions(state),
-			sortValue: getSortValue(state)
+			sort: makeSelectSort(state)
 		}
 	};
 };
@@ -164,7 +165,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
 	fetchAccounts: () => dispatch(actions.fetchAccounts()),
 	fetchCategories: () => dispatch(actions.fetchCategories()),
-	fetchSortOptions: () => dispatch(actions.fetchSortOptions()),
 	fetchTransactions: () => dispatch(actions.fetchTransactions()),
 	filterAccount: (event) => dispatch(actions.filterAccount(event.target.value)),
 	resetAllFilters: () => dispatch(actions.resetAllFilters()),
