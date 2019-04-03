@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import actions from './actions';
 import { AccountDetails } from './AccountDetails';
 import { AccountFilter } from './AccountFilter';
+import { DateFilter } from './DateFilter';
 import { CategoriesFilter } from './CategoriesFilter';
 import { TransactionsList } from './TransactionsList';
 import { TransactionSort } from './TransactionSort';
@@ -76,11 +77,20 @@ export class Transactions extends React.Component {
 		const accounts = state.accountsData ? state.accountsData.accounts : [];
 		const accountFilter = state.filters ? state.filters.account : null;
 		const accountDetails = { renderComponent: () => <AccountDetails account={accountFilter}></AccountDetails> }
+		const fromValue = state.filters.date ? state.filters.date.from : '';
+		const toValue = state.filters.date ? state.filters.date.to : '';
+		const dateFilter = {
+			header: () => <HeaderRow><Header>Date Range</Header></HeaderRow>,
+			renderComponent: () =>
+				<DateFilter
+					fromValue={fromValue}
+					toValue={toValue}
+					onChangeFrom={() => this.props.filterByDateFrom}
+					onChangeTo={() => this.props.filterByDateTo}
+				/>
+		};
 		const categoriesFilter = {
-			header: () => 
-				<HeaderRow>
-					<Header>Categories</Header>
-				</HeaderRow>,
+			header: () => <HeaderRow><Header>Categories</Header></HeaderRow>,
 			renderComponent: () => 
 				<CategoriesFilter
 					options={state.filters.category}
@@ -118,6 +128,7 @@ export class Transactions extends React.Component {
 					</Grid>
 					<Grid item sm={4}>
 						{renderGridItem(accountDetails)}
+						{renderGridItem(dateFilter)}
 						{renderGridItem(categoriesFilter)}
 						{resetLink()}
 					</Grid>
@@ -167,6 +178,8 @@ const mapDispatchToProps = dispatch => ({
 	fetchCategories: () => dispatch(actions.fetchCategories()),
 	fetchTransactions: () => dispatch(actions.fetchTransactions()),
 	filterAccount: (event) => dispatch(actions.filterAccount(event.target.value)),
+	filterByDateFrom: (event) => dispatch(actions.filterByDateFrom(event.target.value)),
+	filterByDateTo: (event) => dispatch(actions.filterByDateTo(event.target.value)),
 	resetAllFilters: () => dispatch(actions.resetAllFilters()),
 	sortTransactions: (event) => dispatch(actions.sortTransactions(event.target.value)),
 	toggleCategory: (event) => dispatch(actions.toggleCategory(event.target.value))
