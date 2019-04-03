@@ -2,20 +2,11 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 import { actionTypes } from './constants';
 import actions from './actions';
 import { client, endpoints } from '../../utils/api';
-import { allAccounts } from './constants';
 
 export function * fetchAccounts() {
 	try {
 		const response = yield call(client.get, endpoints.accounts);
 		yield put(actions.fetchAccountsSuccess(response.data));
-
-		const filter = {
-			key: 'account',
-			options: allAccounts
-		};
-		const arrSum = arr => arr.reduce((a,b) => a + b, 0);
-		filter.options['balance'] = response.data ? arrSum(response.data.accounts.map(a => a.balance)) : 0;
-		yield put(actions.addNewFilter(filter));
 	}
 	catch(e) {
 		yield put(actions.fetchAccountsFailure());
@@ -27,16 +18,6 @@ export function * fetchCategories() {
 		const response = yield call(client.get, endpoints.categories);
 		const categories = response.data ? response.data.categories : [];
 		yield put(actions.fetchCategoriesSuccess(categories));
-
-		const filter = {
-			key: 'category',
-			options: {}
-		}
-		categories.forEach(c => {
-			filter.options[c] = true;
-		});
-		filter.options['MISC'] = true;
-		yield put(actions.addNewFilter(filter));
 	}
 	catch(e) {
 		yield put(actions.fetchCategoriesFailure());

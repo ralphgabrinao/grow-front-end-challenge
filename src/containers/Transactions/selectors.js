@@ -1,12 +1,38 @@
 import { createSelector } from 'reselect';
+import { allAccounts } from './constants';
 
 /* istanbul ignore next */
 export const getAccountsData = state => state.Transactions.accountsData;
 export const getCategories = state => state.Transactions.categories;
-export const getFilters = state => state.Transactions.filters;
+const getFilters = state => state.Transactions.filters;
 export const getSortOptions = state => state.Transactions.sortOptions;
 export const getSortValue = state => state.Transactions.sortValue;
 const getTransactionsData = state => state.Transactions.transactionsData;
+
+export const makeSelectFilters = createSelector(
+	[getFilters, getAccountsData, getCategories],
+	(filters, accountsData, categories) => {
+		if (!filters.account) {
+			if (accountsData) {
+				const arrSum = arr => arr.reduce((a,b) => a + b, 0);
+				const filter = allAccounts;
+				filter.balance = arrSum(accountsData.accounts.map(a => a.balance));
+				filters.account = filter;
+			}
+		}
+
+		if (!filters.category) {
+			if (categories.length > 0) {
+				const filter = {};
+				categories.forEach(c => { filter[c] = true; });
+				filter.MISC = true;
+				filters.category = filter;
+			}
+		}
+
+		return filters;
+	}
+);
 
 export const makeSelectTransactionsData = createSelector(
 	[getAccountsData, getTransactionsData],
@@ -16,7 +42,6 @@ export const makeSelectTransactionsData = createSelector(
 		const transactions = transactionsData.transactions.map(t => {
 			const split = t.transactionDate.split('-');
 			const date = new Date(split[0], split[1], split[2]);
-			console.log(date);
 			return {
 				...t,
 				transactionDateTime: date,
