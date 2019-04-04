@@ -27,6 +27,7 @@ const Label = styled.span`
 
 const Value = styled.span`
 	font-size: 18px;
+	opacity: 0.75;
 	&.balance {
 		font-size: 36px;
 	}
@@ -39,21 +40,20 @@ export const AccountDetails = (props) => {
 		<Wrapper>
 			<Row>
 				<Detail>
-					<Label>Balance</Label>
 					<Value className={'balance'}>$ { account.balance }</Value>
-					<Label>{ account.balanceUpdated ? `Last Updated on ${account.balanceUpdated}` : '' }</Label>
+					<Label>Balance { account.balanceUpdated ? `as of ${account.balanceUpdated}` : '' }</Label>
 				</Detail>
 			</Row>
 		{
 			account.accountId ?
 			<Row>
 				<Detail>
-					<Label>Transit Number</Label>
 					<Value>{account.transitNumber}</Value>
+					<Label>Transit Number</Label>
 				</Detail>
 				<Detail>
-					<Label>Account Number</Label>
 					<Value>{account.accountNumber}</Value>
+					<Label>Account Number</Label>
 				</Detail>
 			</Row> :
 			<div />
