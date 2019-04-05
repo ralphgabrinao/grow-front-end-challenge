@@ -139,7 +139,7 @@ export class Transactions extends React.Component {
 						{resetLink()}
 					</Grid>
 					<Grid item sm={8}>
-						{renderGridItem(summary)}
+						{transactions.length > 0 ? renderGridItem(summary) : ''}
 						{renderGridItem(transactionsList)}
 					</Grid>
 				</Grid>
