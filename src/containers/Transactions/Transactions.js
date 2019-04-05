@@ -2,12 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import actions from './actions';
-import { AccountDetails } from './AccountDetails';
-import { AccountFilter } from './AccountFilter';
+import { AccountDetails } from '../../components/Transactions/AccountDetails';
+import { AccountFilter } from '../../components/Transactions/AccountFilter';
 import { DateFilter } from './DateFilter';
-import { CategoriesFilter } from './CategoriesFilter';
-import { TransactionsList } from './TransactionsList';
-import { TransactionSort } from './TransactionSort';
+import { CategoriesFilter } from '../../components/Transactions/CategoriesFilter';
+import { TransactionsList } from '../../components/Transactions/TransactionsList';
+import { TransactionSort } from '../../components/Transactions/TransactionSort';
+import { TransactionSummary } from '../../components/Transactions/TransactionSummary';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
@@ -16,13 +17,14 @@ import {
 	makeSelectTransactionsData,
 	getAccountsData,
 	getCategories,
+	getTransactionSummary,
 	makeSelectFilters,
 	makeSelectSort
 } from './selectors';
 
 const Wrapper = styled.div`
 	height: 100%;
-	max-width: 1400px;
+	max-width: 1800px;
 	padding: 40px 150px;
 `;
 
@@ -116,7 +118,11 @@ export class Transactions extends React.Component {
 					<Link onClick={() => this.props.resetAllFilters()}>Reset all filters</Link>
 				</Grid>
 			);
-		}
+		};
+		const summary = {
+			header: () => <HeaderRow><Header>Summary</Header></HeaderRow>,
+			renderComponent: () => <TransactionSummary data={state.summary}/>
+		};
 		return (
 			<Wrapper>
 				<Grid container spacing={24} justify='center'>
@@ -133,6 +139,7 @@ export class Transactions extends React.Component {
 						{resetLink()}
 					</Grid>
 					<Grid item sm={8}>
+						{renderGridItem(summary)}
 						{renderGridItem(transactionsList)}
 					</Grid>
 				</Grid>
@@ -163,6 +170,7 @@ const mapStateToProps = state => {
 		Transactions: {
 			accountsData: getAccountsData(state),
 			categories: getCategories(state),
+			summary: getTransactionSummary(state),
 			transactionsData: makeSelectTransactionsData(state),
 			filteredTransactions: getGroupedTransactions(state),
 			filters: makeSelectFilters(state),

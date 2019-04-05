@@ -49,11 +49,11 @@ export const AccountDetails = (props) => {
 			<Row>
 				<Detail>
 					<Value>{account.transitNumber}</Value>
-					<Label>Transit Number</Label>
+					<Label>Transit #</Label>
 				</Detail>
 				<Detail>
 					<Value>{account.accountNumber}</Value>
-					<Label>Account Number</Label>
+					<Label>Account #</Label>
 				</Detail>
 			</Row> :
 			<div />

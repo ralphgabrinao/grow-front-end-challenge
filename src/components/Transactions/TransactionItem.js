@@ -54,11 +54,10 @@ const Deposit = styled.span`
 `;
 
 export const TransactionItem = ({ transaction }) => {
-	const formatCategory = str => str.replace(/[_]/g, ' ');
 	return (
 		<Wrapper>
 			<Text>
-				<OverlineText>{formatCategory(transaction.category)}</OverlineText>
+				<OverlineText>{transaction.category}</OverlineText>
 				<PrimaryText>{transaction.description}</PrimaryText>
 				<SecondaryText>{transaction.account ? transaction.account.accountName : ''}</SecondaryText>
 			</Text>
