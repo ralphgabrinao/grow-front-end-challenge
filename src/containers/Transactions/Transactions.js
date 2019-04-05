@@ -2,12 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import actions from './actions';
-import { AccountDetails } from './AccountDetails';
-import { AccountFilter } from './AccountFilter';
+import { AccountDetails } from '../../components/Transactions/AccountDetails';
+import { AccountFilter } from '../../components/Transactions/AccountFilter';
 import { DateFilter } from './DateFilter';
-import { CategoriesFilter } from './CategoriesFilter';
-import { TransactionsList } from './TransactionsList';
-import { TransactionSort } from './TransactionSort';
+import { CategoriesFilter } from '../../components/Transactions/CategoriesFilter';
+import { TransactionsList } from '../../components/Transactions/TransactionsList';
+import { TransactionSort } from '../../components/Transactions/TransactionSort';
+import { TransactionBreakdown } from '../../components/Transactions/TransactionBreakdown';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
@@ -22,7 +23,7 @@ import {
 
 const Wrapper = styled.div`
 	height: 100%;
-	max-width: 1400px;
+	max-width: 1800px;
 	padding: 40px 150px;
 `;
 
@@ -116,7 +117,11 @@ export class Transactions extends React.Component {
 					<Link onClick={() => this.props.resetAllFilters()}>Reset all filters</Link>
 				</Grid>
 			);
-		}
+		};
+		const breakdown = {
+			header: () => <HeaderRow><Header>By the numbers</Header></HeaderRow>,
+			renderComponent: () => <TransactionBreakdown />
+		};
 		return (
 			<Wrapper>
 				<Grid container spacing={24} justify='center'>
@@ -126,14 +131,17 @@ export class Transactions extends React.Component {
 							value={accountFilter}
 							handleChange={() => this.props.filterAccount} />
 					</Grid>
-					<Grid item sm={4}>
+					<Grid item sm={3}>
 						{renderGridItem(accountDetails)}
 						{renderGridItem(dateFilter)}
 						{renderGridItem(categoriesFilter)}
 						{resetLink()}
 					</Grid>
-					<Grid item sm={8}>
+					<Grid item sm={6}>
 						{renderGridItem(transactionsList)}
+					</Grid>
+					<Grid item sm={3}>
+						{renderGridItem(breakdown)}
 					</Grid>
 				</Grid>
 			</Wrapper>
