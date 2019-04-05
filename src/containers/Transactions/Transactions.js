@@ -8,7 +8,7 @@ import { DateFilter } from './DateFilter';
 import { CategoriesFilter } from '../../components/Transactions/CategoriesFilter';
 import { TransactionsList } from '../../components/Transactions/TransactionsList';
 import { TransactionSort } from '../../components/Transactions/TransactionSort';
-import { TransactionBreakdown } from '../../components/Transactions/TransactionBreakdown';
+import { TransactionSummary } from '../../components/Transactions/TransactionSummary';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import styled from 'styled-components';
@@ -17,6 +17,7 @@ import {
 	makeSelectTransactionsData,
 	getAccountsData,
 	getCategories,
+	getTransactionSummary,
 	makeSelectFilters,
 	makeSelectSort
 } from './selectors';
@@ -118,9 +119,9 @@ export class Transactions extends React.Component {
 				</Grid>
 			);
 		};
-		const breakdown = {
-			header: () => <HeaderRow><Header>By the numbers</Header></HeaderRow>,
-			renderComponent: () => <TransactionBreakdown />
+		const summary = {
+			header: () => <HeaderRow><Header>Summary</Header></HeaderRow>,
+			renderComponent: () => <TransactionSummary data={state.summary}/>
 		};
 		return (
 			<Wrapper>
@@ -131,17 +132,15 @@ export class Transactions extends React.Component {
 							value={accountFilter}
 							handleChange={() => this.props.filterAccount} />
 					</Grid>
-					<Grid item sm={3}>
+					<Grid item sm={4}>
 						{renderGridItem(accountDetails)}
 						{renderGridItem(dateFilter)}
 						{renderGridItem(categoriesFilter)}
 						{resetLink()}
 					</Grid>
-					<Grid item sm={6}>
+					<Grid item sm={8}>
+						{renderGridItem(summary)}
 						{renderGridItem(transactionsList)}
-					</Grid>
-					<Grid item sm={3}>
-						{renderGridItem(breakdown)}
 					</Grid>
 				</Grid>
 			</Wrapper>
@@ -171,6 +170,7 @@ const mapStateToProps = state => {
 		Transactions: {
 			accountsData: getAccountsData(state),
 			categories: getCategories(state),
+			summary: getTransactionSummary(state),
 			transactionsData: makeSelectTransactionsData(state),
 			filteredTransactions: getGroupedTransactions(state),
 			filters: makeSelectFilters(state),

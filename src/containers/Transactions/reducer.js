@@ -4,6 +4,7 @@ import { newState } from '../../utils/state';
 const initialState = {
 	accountsData: null,
 	categories: [],
+	summary: {},
 	transactionsData: null,
 	filteredTransactions: [],
 	filters: {},

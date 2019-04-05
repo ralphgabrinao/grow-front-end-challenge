@@ -8,12 +8,14 @@ const getFilters = state => state.Transactions.filters;
 const getSort = state => state.Transactions.sort;
 const getTransactionsData = state => state.Transactions.transactionsData;
 
+const arrSum = arr => arr.reduce((a,b) => a + b, 0);
+const formatCategory = str => str.replace(/[_]/g, ' ');
+
 export const makeSelectFilters = createSelector(
 	[getFilters, getAccountsData, getCategories],
 	(filters, accountsData, categories) => {
 		if (!filters.account) {
 			if (accountsData) {
-				const arrSum = arr => arr.reduce((a,b) => a + b, 0);
 				const filter = allAccounts;
 				filter.balance = 0;
 				filter.balance = arrSum(accountsData.accounts.map(a => a.balance));
@@ -24,7 +26,7 @@ export const makeSelectFilters = createSelector(
 		if (!filters.category) {
 			if (categories.length > 0) {
 				const filter = {};
-				categories.forEach(c => { filter[c] = true; });
+				categories.forEach(c => { filter[formatCategory(c)] = true; });
 				filter.MISC = true;
 				filters.category = filter;
 			}
@@ -67,7 +69,7 @@ export const makeSelectTransactionsData = createSelector(
 			return {
 				...t,
 				transactionDateTime: date,
-				category: t.category ? t.category : 'MISC',
+				category: t.category ? formatCategory(t.category) : 'MISC',
 				account: accounts ? accounts.filter(a => a.accountId === t.accountId)[0] : null
 			};
 		});
@@ -75,7 +77,7 @@ export const makeSelectTransactionsData = createSelector(
 	}
 );
 
-const getFilteredTransactionsData = createSelector(
+const getFilteredTransactions = createSelector(
 	[getAccountsData, makeSelectTransactionsData, makeSelectFilters],
 	(accountsData, transactionsData, filters) => {
 		if (!transactionsData) return null;
@@ -88,8 +90,8 @@ const getFilteredTransactionsData = createSelector(
 	}
 );
 
-const getSortedTransactionsData = createSelector(
-	[getFilteredTransactionsData, makeSelectSort],
+const getSortedTransactions = createSelector(
+	[getFilteredTransactions, makeSelectSort],
 	(transactions, sort) => {
 		if (!transactions || !sort.value) return transactions;
 		const arr = Array.from(transactions);
@@ -99,7 +101,7 @@ const getSortedTransactionsData = createSelector(
 );
 
 export const getGroupedTransactions = createSelector(
-	getSortedTransactionsData,
+	getSortedTransactions,
 	transactions => {
 		if (!transactions) return [];
 		const transactionDates = Array.from(new Set(transactions.map(t => t.transactionDate)));
@@ -108,5 +110,27 @@ export const getGroupedTransactions = createSelector(
 				date: d, 
 				transactions: transactions.filter(t => t.transactionDate === d) } 
 		});
+	}
+);
+
+export const getTransactionSummary = createSelector(
+	[getFilters, getFilteredTransactions],
+	(filters, transactions) => {
+		if (!filters || !filters.category || !transactions) return [];
+		let categoryCount = Object.entries(filters.category).map(c => {
+			const value = transactions.filter(t => t.category === c[0]).length;
+			return { title: c[0], value };
+		});
+		categoryCount.sort((a, b) => b.value - a.value);
+		let cut = 1;
+		while (cut < 4 && categoryCount[cut] && categoryCount[cut].value > 0)
+			cut++;
+		const top = categoryCount.slice(0,cut);
+		const others = { title: 'Other', value: arrSum(categoryCount.slice(cut).map(x => x.value)) };
+		const summary = {
+			categories: others.value > 0 ? [...top, others] : top,
+			totalValue: transactions.length
+		}
+		return summary;
 	}
 );
