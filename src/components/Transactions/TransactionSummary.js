@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 
 const PieChart = props => {
 	const { data } = props;
-	const chartStyle = { height: '120px' };
+	const chartStyle = { height: '140px' };
 	const labelStyle = { fontSize: '8px' };
 	const lineWidth = 15;
 	return (
